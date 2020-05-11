@@ -1,0 +1,11 @@
+﻿  test.cpp
+C:\Users\marcr\source\repos\SNC_ABTDin\SNC_ABTDin\src\abt_compression.h(80,30): warning C4244: 'argumento': conversión de 'uint64_t' a 'const unsigned int'; posible pérdida de datos
+C:\Users\marcr\source\repos\SNC_ABTDin\SNC_ABTDin\src\abt_compression.h(94,11): warning C4244: 'argumento': conversión de 'uint64_t' a 'const unsigned int'; posible pérdida de datos
+C:\Users\marcr\source\repos\SNC_ABTDin\SNC_ABTDin\src\abt_compression.h(111,9): warning C4244: 'argumento': conversión de 'uint64_t' a 'const unsigned int'; posible pérdida de datos
+C:\Users\marcr\source\repos\SNC_ABTDin\SNC_ABTDin\src\abt_compression.h(111,27): warning C4244: 'argumento': conversión de 'uint64_t' a 'const unsigned int'; posible pérdida de datos
+C:\Users\marcr\source\repos\SNC_ABTDin\SNC_ABTDin\src\abt_compression.h(118,17): warning C4244: 'argumento': conversión de 'uint64_t' a 'const unsigned int'; posible pérdida de datos
+C:\Users\marcr\source\repos\SNC_ABTDin\SNC_ABTDin\src\abt_compression.h(144,18): warning C4244: 'argumento': conversión de 'uint64_t' a 'const unsigned int'; posible pérdida de datos
+C:\Users\marcr\source\repos\SNC_ABTDin\SNC_ABTDin\src\abt_compression.h(173,17): warning C4018: '<': no coinciden signed/unsigned
+test.obj : error LNK2019: símbolo externo "public: void __thiscall DeltaCode::EncodeInt(int,class BitString *)" (?EncodeInt@DeltaCode@@QAEXHPAVBitString@@@Z) sin resolver al que se hace referencia en la función "public: void __thiscall DeltaCode::Encode(class std::vector<int,class std::allocator<int> > const &,class BitString *)" (?Encode@DeltaCode@@QAEXABV?$vector@HV?$allocator@H@std@@@std@@PAVBitString@@@Z)
+test.obj : error LNK2019: símbolo externo "public: int __thiscall DeltaCode::DecodeNextInt(class BitString const &,unsigned __int64 *)" (?DecodeNextInt@DeltaCode@@QAEHABVBitString@@PA_K@Z) sin resolver al que se hace referencia en la función "public: void __thiscall DeltaCode::Decode(class BitString const &,class std::vector<int,class std::allocator<int> > *)" (?Decode@DeltaCode@@QAEXABVBitString@@PAV?$vector@HV?$allocator@H@std@@@std@@@Z)
+C:\Users\marcr\source\repos\SNC_ABTDin\Debug\Test.exe : fatal error LNK1120: 2 externos sin resolver

@@ -358,110 +358,120 @@ void AbtCompression ::Develop(const BitString &code, std::vector<std::pair<int, 
   {
     edges->at(i).first = order[edges->at(i).first];
     edges->at(i).second = order[edges->at(i).second];
-  }
+  } 
   std::sort(edges->begin(), edges->end());
 }
+void inOrder(std::string &decoded, int x, int initial_v, int n) {
+    int v = x;
+    std::string bit_z = "0";
+    if (((v * 2) + 1) <= n-1) {
+        while (((v * 2) + 1) < n - 1) {
+            int son = (v * 2) + 1;
+            int dif = (n - 1) - son - 1;
+            decoded.insert(decoded.size()-dif, bit_z);
+            v = (v * 2) + 1;
+        }
+        if (((v * 2) + 1) > n - 1) {
+            v = initial_v;
+        }
+    }
+     if (((v * 2) + 2) <= n-1) {
+        while (((v * 2) + 2) <= n - 1) {
+            int son = (v * 2) + 2;
+            int dif = (n - 1) - son - 1;
+            decoded.insert(decoded.size() - dif, bit_z);
+            v = (v * 2) + 2;
+        }
+        if (((v * 2) + 2) > n - 1) {
+            v = initial_v;
+        }
+    }
 
+}
 
 bool AbtCompression::Edge_existance_checking(std::string result, int v, int height){
     ifstream inf(result.c_str(), std::ios_base::app);
     bitChar bchar;
     std::string decoded;
     decoded = bchar.readByBits(inf);
-    std::string bit8_fragment;
-    std::string bit8_aux;
     std::string bit;
-    std::string bit_aux;
-    std::string aux;
-    std::string aux1;
-    std::string aux2;
-    std::string final_str_mod;
-    int cur, begCol, endCol, nextIndex;
+    int nextIndex = 0;
     int n = std::pow(2, height) - 1; //num of nodes that the tree contains
-    int max_n = ((n - 1) / 2);  //num of nodes that the tree contains for that height and the lower downs
-    cur = 0;
-    begCol = 0;                                                                                                 
-    endCol = n;
-    nextIndex = 0;
     int midCol = ((n-1)+((n-1)/2))/2; // esto te da el nodo hoja central, es decir incluyendo este hacia 15/2, se va hacia el nodo izquierdo para n = 15
     int minCol = (n - 1) / 2;
     int maxCol = n - 1;
-    int curNodes[8] = { NULL };
-    int auxNodes[8] = { NULL };
+    int curNode;
     int pos=0;
     int depth = 0;
+    int minAuxIndex = 0;
+    int maxAuxIndex = 0;
     //int previous_midCol = midCol;
-    bool switched = false;
-    int count_8bit = 1;
-    int last_1bit = -1;
     int y = (v * 2)+((n/2)-v); // esto lo que hace es para el num del nodo le calcula la pos en la que iba antes de descomprimir
     int* rejected_nums = (int*)malloc(n * sizeof(int));
     int searche_num = (n / 2) +  v;
+    std::string bit_z = "0";
+    std::string bit_2_insert = "00";
+    /*for (int i = 0; i < n - 1;i++) {
+        bit_2_insert = decoded.substr(i, 1);
+        if (bit_2_insert == "0") {
+            if ((i*2) + 1 && (i * 2) + 2) {
+                decoded.insert((i*2)+1, bit_z);
+            }
+        }
+    }*/
+    decoded.pop_back();
     for (int i = 0; i < decoded.size();) {
-        if (i % 8 == 0) { //no funciona correctamente pq no controla bien cuando supera la posicion 7 del vector curNodes y eso hace que solo lo haga bien si se busca el valor 0.
-            bit8_fragment = decoded.substr(i, 8);
-        }
-        if (switched == true) {
-            bit8_aux = decoded.substr((7*(count_8bit-1))+1, 7);
-            for (int x = 0; x < 7; x++) {
-                bit_aux = bit8_aux.substr(x % 7, 1);
-                auxNodes[x] = stoi(bit_aux, nullptr, 2);
-                if (auxNodes[x]==1) {
-                    last_1bit = x;
-                }
-                curNodes[x] = auxNodes[x];
-            }
-            if (last_1bit!=-1) {
-                aux = bit8_aux.substr(0, 1);
-                aux1 = bit8_aux.substr(1, last_1bit);
-                if (last_1bit == 6) {
-                    final_str_mod = aux + aux1;
-                }
-                else {
-                    aux2 = bit8_aux.substr((last_1bit + 2), 7 - (last_1bit + 1)); // esta mal pq solo sirve si last_1bit es 3 o un num menor
-                    final_str_mod = aux + aux2 + aux1;
-
-                }
-                
-                
-                bit8_fragment = final_str_mod;
-            }
-            else {
-                bit8_fragment = "00000000";
-            }
-            final_str_mod = decoded.substr((7 * count_8bit) + 1, 1);
-            curNodes[7] = stoi(final_str_mod, nullptr, 2);
-            bit8_fragment = bit8_fragment + std::to_string(curNodes[7]);
-            switched = false;
-        }
-        
-        bit = bit8_fragment.substr(i%8, 1);
-        curNodes[i % 8] = stoi(bit, nullptr, 2); // peta aqui por algun motivo, probablemente sea que se resetea curNodes per no se rellena más
-        
-        if (curNodes[(i)%8]==1) {
-            if (midCol == nextIndex && depth == (height-1)) {
+        bit = decoded.substr(i, 1);
+        curNode = stoi(bit, nullptr, 2);
+        if (curNode == 1) {
+            if (midCol == nextIndex && depth == (height - 1)) {
                 return true;
             }
-            if (y <=midCol) {
+            if (y <= midCol) {
                 pos = 0;
             }
             else {
                 pos = 1;
             }
-            nextIndex = (i*2)+pos + 1;
-
-            if (y <= midCol && y >= minCol){ // left std::pow(2, height)
+            nextIndex = (i * 2) + pos + 1;
+            //minAuxIndex = i;
+            //maxAuxIndex = i;
+            /*while ((minAuxIndex * 2) + 1 < n) {
+                minAuxIndex = (minAuxIndex * 2) + 1;
+            }*/
+            /*while ((maxAuxIndex * 2) + 2 < n) {
+                maxAuxIndex = (maxAuxIndex * 2) + 2;
+            }*/
+            //y <= midCol &&
+            if ( depth <= height-2) {
+                for (int z = i; z >= (std::pow(2,depth)-1); z-- ) {
+                    if (decoded.substr(z, 1) == "0") {
+                        int n_aux = z;
+                        inOrder(decoded, n_aux, n_aux, n);
+                    }
+                }
+            }
+            /*else if (y > midCol && depth <= 5) {
+                for (int z = nextIndex; z <= ((std::pow(2,depth+1)-1)*2); z++) {
+                    if (decoded.substr(z, 1) == "0") {
+                        decoded = inOrder(decoded, z, n);
+                    }
+                }
+            }*/
+            bit = decoded.substr(i, 1);
+            curNode = stoi(bit, nullptr, 2);
+            if (y <= midCol && y >= minCol) { // left 
                 maxCol = midCol;
-                minCol = (maxCol - ( std::pow(2, height-depth-1)/ 2)) + 1;
-                if (minCol < ((n-1)/2)) {
+                minCol = (maxCol - (std::pow(2, height - depth - 1) / 2)) + 1;
+                if (minCol < ((n - 1) / 2)) {
                     minCol = (n - 1) / 2;
                 }
                 midCol = (maxCol + minCol) / 2;
                 depth++;
             }
-            else if (y > midCol && y <= maxCol) { 
+            else if (y > midCol && y <= maxCol) {
                 // right
-                maxCol = (midCol + (std::pow(2, height - depth - 1) / 2)) ;
+                maxCol = (midCol + (std::pow(2, height - depth - 1) / 2));
                 minCol = midCol;
                 if (maxCol > (n - 1)) {
                     maxCol = (n - 1);
@@ -469,38 +479,12 @@ bool AbtCompression::Edge_existance_checking(std::string result, int v, int heig
                 midCol = (maxCol + minCol) / 2;
                 depth++;
             }
-           /* if (y >= n/2 && y <= midCol) { // calcular los hijos del nodo derecho e izquierdo desde que posicion a que posicion van.
-                midCol = (midCol + ((n - 1) / 2)) / 2;
-            }
-            else if(previous_midCol != NULL && previous_midCol< n && previous_midCol>midCol){
-                midCol = (midCol + previous_midCol) / 2;
-            }
-            else {
-                midCol = ((midCol + 1) + (n - 1)) / 2;
-            }
-            
-            if (depth % 2 != 0 && y < midCol && y> n/2 && y < previous_midCol) {
-                previous_midCol = midCol;
-            }
-            else if (depth % 2 != 0 && y > midCol && y < n && y > previous_midCol) {
-                previous_midCol = midCol;
-            }*/
-
         }
         else {
             return false;
         }
-        if (nextIndex > 7*count_8bit ) {
-            count_8bit++;
-            for (int j = 0; j < 8; j++) {
-                if (curNodes[j] == 0) {
-                    switched = true;
-                }
-                curNodes[j] = NULL; // free the values of curNodes every 8 bits
 
-            }
-
-        }
+        
         i = nextIndex;
     }
 }

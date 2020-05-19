@@ -27,7 +27,7 @@ int main(/*int argc, char **argv*/)
 
   AbtCompression bl;
   string result = "test.txt";
-  int entered_value;
+  int entered_value = NULL;
   auto start = std::chrono::high_resolution_clock::now();
   bl.Compress(edges, result, tmp);
   streampos begin, end;
@@ -52,25 +52,25 @@ int main(/*int argc, char **argv*/)
   height = (int)ceil(log2(max)) + 1;
   int n = std::pow(2, height) - 1; //num of nodes that the tree contains
   bool check_existance_v = false;
-
-  cout << "Enter the leaf node you want to check if exists on the binary tree" << endl;
-  cin >> entered_value;
-  if (entered_value > n / 2) {
-      cout << "The node you were searching DO NOT EXIST because the tree is not that bigger " << endl;
-  }
-  else if (entered_value < 0) {
-      cout << "The node you were searching DO NOT EXIST because you entered a number lower than 0" << endl;
-  }
-  else {
-      check_existance_v = bl.Edge_existance_checking(result, entered_value, height);
-      if (check_existance_v) {
-          cout << "The leaf node you were searching EXIST" << endl;
+  while (entered_value != 99) {
+      cout << "Enter the leaf node you want to check if exists on the binary tree" << endl;
+      cin >> entered_value;
+      if (entered_value > n / 2) {
+          cout << "The node you were searching DO NOT EXIST because the tree is not that bigger " << endl;
+      }
+      else if (entered_value < 0) {
+          cout << "The node you were searching DO NOT EXIST because you entered a number lower than 0" << endl;
       }
       else {
-          cout << "The leaf node you were searching DO NOT EXIST" << endl;
+          check_existance_v = bl.Edge_existance_checking(result, entered_value, height);
+          if (check_existance_v) {
+              cout << "The leaf node you were searching EXIST" << endl;
+          }
+          else {
+              cout << "The leaf node you were searching DO NOT EXIST" << endl;
+          }
       }
   }
- 
   
 //  bl.Partial_decompression(result, 0, 7, n, tmp);
 }

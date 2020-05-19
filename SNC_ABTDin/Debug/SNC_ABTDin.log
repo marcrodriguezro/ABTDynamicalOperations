@@ -24,12 +24,14 @@ C:\Users\marcr\source\repos\SNC_ABTDin\SNC_ABTDin\src\abt_compression.cc(360,15)
 C:\Users\marcr\source\repos\SNC_ABTDin\SNC_ABTDin\src\abt_compression.cc(360,43): warning C4244: 'argumento': conversión de 'uint64_t' a 'const unsigned int'; posible pérdida de datos
 C:\Users\marcr\source\repos\SNC_ABTDin\SNC_ABTDin\src\abt_compression.cc(380,11): warning C4244: 'inicializando': conversión de 'double' a 'int'; posible pérdida de datos
 C:\Users\marcr\source\repos\SNC_ABTDin\SNC_ABTDin\src\abt_compression.cc(400,23): warning C4018: '<': no coinciden signed/unsigned
-C:\Users\marcr\source\repos\SNC_ABTDin\SNC_ABTDin\src\abt_compression.cc(492,23): warning C4018: '<': no coinciden signed/unsigned
-C:\Users\marcr\source\repos\SNC_ABTDin\SNC_ABTDin\src\abt_compression.cc(509,23): warning C4018: '<': no coinciden signed/unsigned
-C:\Users\marcr\source\repos\SNC_ABTDin\SNC_ABTDin\src\abt_compression.cc(562,25): warning C4018: '<': no coinciden signed/unsigned
-C:\Users\marcr\source\repos\SNC_ABTDin\SNC_ABTDin\src\abt_compression.cc(626,27): warning C4018: '<': no coinciden signed/unsigned
-C:\Users\marcr\source\repos\SNC_ABTDin\SNC_ABTDin\src\abt_compression.cc(631,19): warning C4018: '<': no coinciden signed/unsigned
-C:\Users\marcr\source\repos\SNC_ABTDin\SNC_ABTDin\src\abt_compression.cc(657,27): warning C4018: '<': no coinciden signed/unsigned
-C:\Users\marcr\source\repos\SNC_ABTDin\SNC_ABTDin\src\abt_compression.cc(664,25): warning C4018: '<': no coinciden signed/unsigned
-C:\Users\marcr\source\repos\SNC_ABTDin\SNC_ABTDin\src\abt_compression.cc(482): warning C4715: 'AbtCompression::Edge_existance_checking': no todas las rutas de acceso de control devuelven un valor
+C:\Users\marcr\source\repos\SNC_ABTDin\SNC_ABTDin\src\abt_compression.cc(455,71): warning C4244: '=': conversión de 'double' a 'int'; posible pérdida de datos
+C:\Users\marcr\source\repos\SNC_ABTDin\SNC_ABTDin\src\abt_compression.cc(464,34): warning C4244: '=': conversión de 'double' a 'int'; posible pérdida de datos
+C:\Users\marcr\source\repos\SNC_ABTDin\SNC_ABTDin\src\abt_compression.cc(516,23): warning C4018: '<': no coinciden signed/unsigned
+C:\Users\marcr\source\repos\SNC_ABTDin\SNC_ABTDin\src\abt_compression.cc(533,23): warning C4018: '<': no coinciden signed/unsigned
+C:\Users\marcr\source\repos\SNC_ABTDin\SNC_ABTDin\src\abt_compression.cc(586,25): warning C4018: '<': no coinciden signed/unsigned
+C:\Users\marcr\source\repos\SNC_ABTDin\SNC_ABTDin\src\abt_compression.cc(650,27): warning C4018: '<': no coinciden signed/unsigned
+C:\Users\marcr\source\repos\SNC_ABTDin\SNC_ABTDin\src\abt_compression.cc(655,19): warning C4018: '<': no coinciden signed/unsigned
+C:\Users\marcr\source\repos\SNC_ABTDin\SNC_ABTDin\src\abt_compression.cc(681,27): warning C4018: '<': no coinciden signed/unsigned
+C:\Users\marcr\source\repos\SNC_ABTDin\SNC_ABTDin\src\abt_compression.cc(688,25): warning C4018: '<': no coinciden signed/unsigned
+C:\Users\marcr\source\repos\SNC_ABTDin\SNC_ABTDin\src\abt_compression.cc(506): warning C4715: 'AbtCompression::Edge_existance_checking': no todas las rutas de acceso de control devuelven un valor
   SNC_ABTDin.vcxproj -> C:\Users\marcr\source\repos\SNC_ABTDin\Debug\SNC_ABTDin.exe

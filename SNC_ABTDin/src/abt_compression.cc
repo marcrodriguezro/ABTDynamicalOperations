@@ -376,21 +376,21 @@ bool AbtCompression::Edge_existance_checking(std::string result, int v, int heig
     std::string aux1;
     std::string aux2;
     std::string final_str_mod;
-    int cur, begCol, endCol, nextIndex, nodesAtDepth, nodesAtNextDepth;
+    int cur, begCol, endCol, nextIndex;
     int n = std::pow(2, height) - 1; //num of nodes that the tree contains
     int max_n = ((n - 1) / 2);  //num of nodes that the tree contains for that height and the lower downs
     cur = 0;
-    begCol = 0;
+    begCol = 0;                                                                                                 
     endCol = n;
     nextIndex = 0;
-    nodesAtDepth = 1;
     int midCol = ((n-1)+((n-1)/2))/2; // esto te da el nodo hoja central, es decir incluyendo este hacia 15/2, se va hacia el nodo izquierdo para n = 15
-    nodesAtNextDepth = 0;
+    int minCol = (n - 1) / 2;
+    int maxCol = n - 1;
     int curNodes[8] = { NULL };
     int auxNodes[8] = { NULL };
     int pos=0;
     int depth = 0;
-    int previous_midCol = NULL;
+    //int previous_midCol = midCol;
     bool switched = false;
     int count_8bit = 1;
     int last_1bit = -1;
@@ -438,7 +438,7 @@ bool AbtCompression::Edge_existance_checking(std::string result, int v, int heig
         bit = bit8_fragment.substr(i%8, 1);
         curNodes[i % 8] = stoi(bit, nullptr, 2); // peta aqui por algun motivo, probablemente sea que se resetea curNodes per no se rellena más
         
-        if (curNodes[i%8]==1) {
+        if (curNodes[(i)%8]==1) {
             if (midCol == nextIndex && depth == (height-1)) {
                 return true;
             }
@@ -449,7 +449,27 @@ bool AbtCompression::Edge_existance_checking(std::string result, int v, int heig
                 pos = 1;
             }
             nextIndex = (i*2)+pos + 1;
-            if (y >= n/2 && y <= midCol) {
+
+            if (y <= midCol && y >= minCol){ // left std::pow(2, height)
+                maxCol = midCol;
+                minCol = (maxCol - ( std::pow(2, height-depth-1)/ 2)) + 1;
+                if (minCol < ((n-1)/2)) {
+                    minCol = (n - 1) / 2;
+                }
+                midCol = (maxCol + minCol) / 2;
+                depth++;
+            }
+            else if (y > midCol && y <= maxCol) { 
+                // right
+                maxCol = (midCol + (std::pow(2, height - depth - 1) / 2)) ;
+                minCol = midCol;
+                if (maxCol > (n - 1)) {
+                    maxCol = (n - 1);
+                }
+                midCol = (maxCol + minCol) / 2;
+                depth++;
+            }
+           /* if (y >= n/2 && y <= midCol) { // calcular los hijos del nodo derecho e izquierdo desde que posicion a que posicion van.
                 midCol = (midCol + ((n - 1) / 2)) / 2;
             }
             else if(previous_midCol != NULL && previous_midCol< n && previous_midCol>midCol){
@@ -458,10 +478,14 @@ bool AbtCompression::Edge_existance_checking(std::string result, int v, int heig
             else {
                 midCol = ((midCol + 1) + (n - 1)) / 2;
             }
-            depth++;
-            if (previous_midCol != midCol) {
+            
+            if (depth % 2 != 0 && y < midCol && y> n/2 && y < previous_midCol) {
                 previous_midCol = midCol;
             }
+            else if (depth % 2 != 0 && y > midCol && y < n && y > previous_midCol) {
+                previous_midCol = midCol;
+            }*/
+
         }
         else {
             return false;

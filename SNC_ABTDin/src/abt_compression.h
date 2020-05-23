@@ -57,9 +57,9 @@ public:
                 std::string result, std::vector<int> &tmp);
   void Develop(const BitString &code,
                std::vector<std::pair<int, int>> *edges);
-  bool Edge_existance_checking(std::string result, int v, int height);
+  bool Node_existance_checking(std::string result, int v, int height);
 
-  void Partial_decompression(std::string result, int u, int v, int n, std::vector<int> tmp);
+  //void Partial_decompression(std::string result, int u, int v, int n, std::vector<int> tmp);
 
 private:
   void BFSOrder(const std::vector<std::vector<int>> &adj,

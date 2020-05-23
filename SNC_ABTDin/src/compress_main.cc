@@ -27,6 +27,7 @@ int main(/*int argc, char **argv*/)
 
   AbtCompression bl;
   string result = "test.txt";
+  //free what test.txt contains. !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
   int entered_value = NULL;
   auto start = std::chrono::high_resolution_clock::now();
   bl.Compress(edges, result, tmp);
@@ -42,7 +43,6 @@ int main(/*int argc, char **argv*/)
   auto finish = std::chrono::high_resolution_clock::now();
   std::chrono::duration<double> elapsed = finish - start;
   cout << "Elapsed time to compress: " << elapsed.count() << " s\n";
-
   int height;
   std::sort(edges.begin(), edges.end());
   auto max_pair = *std::max_element(std::begin(edges), std::end(edges), [](const auto& p1, const auto& p2) {
@@ -62,7 +62,7 @@ int main(/*int argc, char **argv*/)
           cout << "The node you were searching DO NOT EXIST because you entered a number lower than 0" << endl;
       }
       else {
-          check_existance_v = bl.Edge_existance_checking(result, entered_value, height);
+          check_existance_v = bl.Node_existance_checking(result, entered_value, height);
           if (check_existance_v) {
               cout << "The leaf node you were searching EXIST" << endl;
           }

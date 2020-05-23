@@ -361,7 +361,8 @@ void AbtCompression ::Develop(const BitString &code, std::vector<std::pair<int, 
   } 
   std::sort(edges->begin(), edges->end());
 }
-void inOrder(std::string &decoded, int x, int initial_v, int n) {
+
+void preOrder(std::string &decoded, int x, int initial_v, int n) {
     int v = x;
     std::string bit_z = "0";
     if (((v * 2) + 1) <= n-1) {
@@ -389,11 +390,12 @@ void inOrder(std::string &decoded, int x, int initial_v, int n) {
 
 }
 
-bool AbtCompression::Edge_existance_checking(std::string result, int v, int height){
+bool AbtCompression::Node_existance_checking(std::string result, int v, int height){
     ifstream inf(result.c_str(), std::ios_base::app);
     bitChar bchar;
     std::string decoded;
     decoded = bchar.readByBits(inf);
+    cout << "before: " + decoded << endl;
     std::string bit;
     int nextIndex = 0;
     int n = std::pow(2, height) - 1; //num of nodes that the tree contains
@@ -411,7 +413,7 @@ bool AbtCompression::Edge_existance_checking(std::string result, int v, int heig
     int searche_num = (n / 2) +  v;
     std::string bit_z = "0";
     std::string bit_2_insert = "00";
-    /*for (int i = 0; i < n - 1;i++) {
+    /*for (int i = 0; i < n - 1;i++) { // full decompression of the graph.
         bit_2_insert = decoded.substr(i, 1);
         if (bit_2_insert == "0") {
             if ((i*2) + 1 && (i * 2) + 2) {
@@ -420,12 +422,20 @@ bool AbtCompression::Edge_existance_checking(std::string result, int v, int heig
         }
     }*/
     decoded.pop_back();
+    int f = decoded.size();
+    std::string bit2;
+    while (decoded.substr(f-1, 1)!="1") {
+        bit2 = decoded.substr(f, 1);
+        decoded.pop_back();
+        f--;
+    }
     for (int i = 0; i < decoded.size();) {
         bit = decoded.substr(i, 1);
         curNode = stoi(bit, nullptr, 2);
         if (curNode == 1) {
             if (midCol == nextIndex && depth == (height - 1)) {
                 return true;
+                
             }
             if (y <= midCol) {
                 pos = 0;
@@ -434,30 +444,15 @@ bool AbtCompression::Edge_existance_checking(std::string result, int v, int heig
                 pos = 1;
             }
             nextIndex = (i * 2) + pos + 1;
-            //minAuxIndex = i;
-            //maxAuxIndex = i;
-            /*while ((minAuxIndex * 2) + 1 < n) {
-                minAuxIndex = (minAuxIndex * 2) + 1;
-            }*/
-            /*while ((maxAuxIndex * 2) + 2 < n) {
-                maxAuxIndex = (maxAuxIndex * 2) + 2;
-            }*/
-            //y <= midCol &&
+ 
             if ( depth <= height-2) {
                 for (int z = i; z >= (std::pow(2,depth)-1); z-- ) {
                     if (decoded.substr(z, 1) == "0") {
                         int n_aux = z;
-                        inOrder(decoded, n_aux, n_aux, n);
+                        preOrder(decoded, n_aux, n_aux, n);
                     }
                 }
             }
-            /*else if (y > midCol && depth <= 5) {
-                for (int z = nextIndex; z <= ((std::pow(2,depth+1)-1)*2); z++) {
-                    if (decoded.substr(z, 1) == "0") {
-                        decoded = inOrder(decoded, z, n);
-                    }
-                }
-            }*/
             bit = decoded.substr(i, 1);
             curNode = stoi(bit, nullptr, 2);
             if (y <= midCol && y >= minCol) { // left 
@@ -487,9 +482,10 @@ bool AbtCompression::Edge_existance_checking(std::string result, int v, int heig
         
         i = nextIndex;
     }
+
 }
 
-
+/*
 void AbtCompression::Partial_decompression(std::string result, int u, int v, int n, std::vector<int> tmp) {
     ifstream inf(result.c_str(), std::ios_base::app);
     bitChar bchar;
@@ -551,7 +547,7 @@ void AbtCompression::Partial_decompression(std::string result, int u, int v, int
         nodesAtNextDepth = 0;
     }
 }
-
+*/
 void AbtCompression ::BFSOrder(const std::vector<std::vector<int>> &adj, std::vector<int> *order)
 {
   int num_v = adj.size();

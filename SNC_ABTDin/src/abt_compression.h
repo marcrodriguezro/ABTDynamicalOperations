@@ -59,7 +59,8 @@ public:
                std::vector<std::pair<int, int>> *edges);
   bool Node_existance_checking(std::string result, int v, int height);
 
-  //void Partial_decompression(std::string result, int u, int v, int n, std::vector<int> tmp);
+  bool node_addition(std::string result, int v, int height, int max);
+  void reCompress(std::string result, std::string decoded, int n, int height, int max);
 
 private:
   void BFSOrder(const std::vector<std::vector<int>> &adj,

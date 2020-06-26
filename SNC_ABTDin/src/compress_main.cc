@@ -18,7 +18,7 @@ int main(/*int argc, char **argv*/)
      */
     std::vector<int> tmp;
     vector<pair<int, int>> edges;
-    if (!Input("../data/graph/modified/tvshow_edges3.txt", &edges))
+    if (!Input("../data/graph/modified/tvshow_edges2.txt", &edges))
     {
         cerr << "error: Load failed" << endl;
         exit(EXIT_FAILURE);
@@ -55,54 +55,94 @@ int main(/*int argc, char **argv*/)
     int n = std::pow(2, height) - 1; //num of nodes that the tree contains
     bool check_existance_v = false;
     int button_pressed;
-    int entered_value = 0;
+    int entered_value1 = 0;
+    int entered_value2 = 0;
 
-    cout << "If you want to check the existance of a node press 1, otherwise if you want to add a node press another number diferent than 1, for example: 2" << endl;
+    cout << "If you want to check the existance of a node press 1, otherwise if you want to add a node press 2, finally if you want to check the existance of a node with a non-dynamical algorithm press 3" << endl;
     cin >> button_pressed;
     cout << "If you want to stop the execution enter -1" << endl;
     if (button_pressed == 1) {
-        while (entered_value != -1) {
-            cout << "Enter the leaf node you want to check if exists on the binary tree" << endl;
-            cin >> entered_value;
-            cout << n <<endl;
-            if (entered_value > n / 2) {
-                cout << "The node you were searching DO NOT EXIST because the tree is not that bigger " << endl;
+        while (entered_value1 != -1 || entered_value2 != -1) {
+            cout << "Enter the leaf nodes that you want to check if exists any conection between them on the binary tree" << endl;
+            cin >> entered_value1;
+            cin >> entered_value2;
+            if (entered_value1 > n / 2 || entered_value2 > n / 2) {
+                cout << "Some of the nodes that you were searching DO NOT EXIST because the tree is not that bigger " << endl;
             }
-            else if (entered_value < 0) {
-                cout << "The node you were searching DO NOT EXIST because you entered a number lower than 0" << endl;
+            else if (entered_value1 < 0 || entered_value2 < 0) {
+                cout << "Some of the nodes that you were searching DO NOT EXIST because you entered a number lower than 0" << endl;
             }
             else {
-                check_existance_v = bl.Node_existance_checking(result, entered_value, height);
+                auto start_dynamic = std::chrono::high_resolution_clock::now();
+                check_existance_v = bl.Node_existance_checking(result, entered_value1, entered_value2, height);
                 if (check_existance_v) {
-                    cout << "The leaf node you were searching EXIST" << endl;
+                    cout << "The nodes and the conection between those nodes that you were searching EXIST" << endl;
+                    auto finish_dynamically = std::chrono::high_resolution_clock::now();
+                    std::chrono::duration<double> elapsed = finish_dynamically - start_dynamic;
+                    cout << "Elapsed time to check the existance of an edge and a node dynamically: " << elapsed.count() << " s\n";
                 }
                 else {
-                    cout << "The leaf node you were searching DO NOT EXIST" << endl;
+                    cout << "Seems like the conection between the nodes that you entered DON'T EXIST" << endl;
+                    auto finish_dynamically = std::chrono::high_resolution_clock::now();
+                    std::chrono::duration<double> elapsed = finish_dynamically - start_dynamic;
+                    cout << "Elapsed time to check the existance of an edge and a node dynamically: " << elapsed.count() << " s\n";
                 }
             }
         }
     }
-    else {
-        while (entered_value != -1) {
-            cout << "Enter the leaf node you want to add on the binary tree" << endl;
-            cin >> entered_value;
-            if (entered_value > n / 2) {
-                cout << "The node you are refering DO NOT EXIST because the tree is not that bigger " << endl;
+    else if(button_pressed == 2){
+        while (entered_value1 != -1 || entered_value2 != -1) {
+            cout << "Enter the conection between the nodes that you want to add" << endl;
+            cin >> entered_value1;
+            cin >> entered_value2;
+            if (entered_value1 > n / 2 || entered_value2 > n / 2) {
+                cout << "Some of the nodes that you are refering DO NOT EXIST because the tree is not that bigger " << endl;
             }
-            else if (entered_value < 0) {
-                cout << "The node you are refering DO NOT EXIST because you entered a number lower than 0" << endl;
+            else if (entered_value1 < 0 || entered_value2 < 0) {
+                cout << "Some of the nodes that you are refering DO NOT EXIST because you entered a number lower than 0" << endl;
             }
             else {
-                check_existance_v = bl.node_addition(result, entered_value, height, max);
+                
+                check_existance_v = bl.node_addition(result, entered_value1, entered_value2, height, max);
+
                 if (check_existance_v) {
-                    cout << "The node has been added correclty." << endl;
+                    cout << "The the conection between those nodes has been added correclty." << endl;
                 }
                 else {
-                    cout << "There's some trouble adding the node you selected" << endl;
+                    cout << "There's some trouble adding the nodes and the conection between those nodes you selected" << endl;
                 }
             }
         }
 
+    }
+    else if (button_pressed == 3) {
+        while (entered_value1 != -1 || entered_value2 != -1) {
+            cout << "Enter the leaf nodes that you want to check if exists any conection between them on the binary tree" << endl;
+            cin >> entered_value1;
+            cin >> entered_value2;
+            if (entered_value1 > n / 2 || entered_value2 > n / 2) {
+                cout << "Some of the nodes that you were searching DO NOT EXIST because the tree is not that bigger " << endl;
+            }
+            else if (entered_value1 < 0 || entered_value2 < 0) {
+                cout << "Some of the nodes that you were searching DO NOT EXIST because you entered a number lower than 0" << endl;
+            }
+            else {
+                auto start_static = std::chrono::high_resolution_clock::now();
+                check_existance_v = bl.Node_existance_checking_NCompress(result, entered_value1, entered_value2, height);
+                if (check_existance_v) {
+                    cout << "The nodes and the conection between those nodes that you were searching EXIST" << endl;
+                    auto finish_static = std::chrono::high_resolution_clock::now();
+                    std::chrono::duration<double> elapsed = finish_static - start_static;
+                    cout << "Elapsed time to check the existance of an edge and a node dynamically: " << elapsed.count() << " s\n";
+                }
+                else {
+                    cout << "Seems like the conection between the nodes that you entered DON'T EXIST" << endl;
+                    auto finish_static = std::chrono::high_resolution_clock::now();
+                    std::chrono::duration<double> elapsed = finish_static - start_static;
+                    cout << "Elapsed time to check the existance of an edge and a node dynamically: " << elapsed.count() << " s\n";
+                }
+            }
+        }
     }
 }
 bool Input(const char *filename, vector<pair<int, int>> *edges)

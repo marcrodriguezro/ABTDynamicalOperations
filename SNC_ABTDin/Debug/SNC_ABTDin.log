@@ -1,41 +1,11 @@
-﻿  abt_compression.cc
-C:\Users\marcr\source\repos\SNC_ABTDin\SNC_ABTDin\src\abt_compression.h(84,30): warning C4244: 'argumento': conversión de 'uint64_t' a 'const unsigned int'; posible pérdida de datos
-C:\Users\marcr\source\repos\SNC_ABTDin\SNC_ABTDin\src\abt_compression.h(98,11): warning C4244: 'argumento': conversión de 'uint64_t' a 'const unsigned int'; posible pérdida de datos
-C:\Users\marcr\source\repos\SNC_ABTDin\SNC_ABTDin\src\abt_compression.h(115,9): warning C4244: 'argumento': conversión de 'uint64_t' a 'const unsigned int'; posible pérdida de datos
-C:\Users\marcr\source\repos\SNC_ABTDin\SNC_ABTDin\src\abt_compression.h(115,27): warning C4244: 'argumento': conversión de 'uint64_t' a 'const unsigned int'; posible pérdida de datos
-C:\Users\marcr\source\repos\SNC_ABTDin\SNC_ABTDin\src\abt_compression.h(122,17): warning C4244: 'argumento': conversión de 'uint64_t' a 'const unsigned int'; posible pérdida de datos
-C:\Users\marcr\source\repos\SNC_ABTDin\SNC_ABTDin\src\abt_compression.h(148,18): warning C4244: 'argumento': conversión de 'uint64_t' a 'const unsigned int'; posible pérdida de datos
-C:\Users\marcr\source\repos\SNC_ABTDin\SNC_ABTDin\src\abt_compression.h(177,17): warning C4018: '<': no coinciden signed/unsigned
-C:\Users\marcr\source\repos\SNC_ABTDin\SNC_ABTDin\src\abt_compression.cc(144,32): warning C4244: 'argumento': conversión de 'uint64_t' a 'const unsigned int'; posible pérdida de datos
-C:\Users\marcr\source\repos\SNC_ABTDin\SNC_ABTDin\src\abt_compression.cc(199,44): warning C4244: 'argumento': conversión de 'uint64_t' a 'const unsigned int'; posible pérdida de datos
-C:\Users\marcr\source\repos\SNC_ABTDin\SNC_ABTDin\src\abt_compression.cc(199,60): warning C4244: 'argumento': conversión de 'uint64_t' a 'const unsigned int'; posible pérdida de datos
-C:\Users\marcr\source\repos\SNC_ABTDin\SNC_ABTDin\src\abt_compression.cc(205,19): warning C4244: 'argumento': conversión de 'uint64_t' a 'const unsigned int'; posible pérdida de datos
-C:\Users\marcr\source\repos\SNC_ABTDin\SNC_ABTDin\src\abt_compression.cc(205,38): warning C4244: 'argumento': conversión de 'uint64_t' a 'const unsigned int'; posible pérdida de datos
-C:\Users\marcr\source\repos\SNC_ABTDin\SNC_ABTDin\src\abt_compression.cc(217,21): warning C4244: 'argumento': conversión de 'uint64_t' a 'const unsigned int'; posible pérdida de datos
-C:\Users\marcr\source\repos\SNC_ABTDin\SNC_ABTDin\src\abt_compression.cc(217,48): warning C4244: 'argumento': conversión de 'uint64_t' a 'const unsigned int'; posible pérdida de datos
-C:\Users\marcr\source\repos\SNC_ABTDin\SNC_ABTDin\src\abt_compression.cc(229,21): warning C4018: '<': no coinciden signed/unsigned
-C:\Users\marcr\source\repos\SNC_ABTDin\SNC_ABTDin\src\abt_compression.cc(231,23): warning C4018: '<': no coinciden signed/unsigned
-C:\Users\marcr\source\repos\SNC_ABTDin\SNC_ABTDin\src\abt_compression.cc(265,27): warning C4244: '=': conversión de 'double' a 'int'; posible pérdida de datos
-C:\Users\marcr\source\repos\SNC_ABTDin\SNC_ABTDin\src\abt_compression.cc(337,25): warning C4018: '<': no coinciden signed/unsigned
-C:\Users\marcr\source\repos\SNC_ABTDin\SNC_ABTDin\src\abt_compression.cc(362,23): warning C4018: '<': no coinciden signed/unsigned
-C:\Users\marcr\source\repos\SNC_ABTDin\SNC_ABTDin\src\abt_compression.cc(375,15): warning C4244: 'argumento': conversión de 'uint64_t' a 'const unsigned int'; posible pérdida de datos
-C:\Users\marcr\source\repos\SNC_ABTDin\SNC_ABTDin\src\abt_compression.cc(375,42): warning C4244: 'argumento': conversión de 'uint64_t' a 'const unsigned int'; posible pérdida de datos
-C:\Users\marcr\source\repos\SNC_ABTDin\SNC_ABTDin\src\abt_compression.cc(376,15): warning C4244: 'argumento': conversión de 'uint64_t' a 'const unsigned int'; posible pérdida de datos
-C:\Users\marcr\source\repos\SNC_ABTDin\SNC_ABTDin\src\abt_compression.cc(376,43): warning C4244: 'argumento': conversión de 'uint64_t' a 'const unsigned int'; posible pérdida de datos
-C:\Users\marcr\source\repos\SNC_ABTDin\SNC_ABTDin\src\abt_compression.cc(417,11): warning C4244: 'inicializando': conversión de 'double' a 'int'; posible pérdida de datos
-C:\Users\marcr\source\repos\SNC_ABTDin\SNC_ABTDin\src\abt_compression.cc(450,23): warning C4018: '<': no coinciden signed/unsigned
-C:\Users\marcr\source\repos\SNC_ABTDin\SNC_ABTDin\src\abt_compression.cc(480,79): warning C4244: '=': conversión de 'double' a 'int'; posible pérdida de datos
-C:\Users\marcr\source\repos\SNC_ABTDin\SNC_ABTDin\src\abt_compression.cc(489,38): warning C4244: '=': conversión de 'double' a 'int'; posible pérdida de datos
-C:\Users\marcr\source\repos\SNC_ABTDin\SNC_ABTDin\src\abt_compression.cc(520,27): warning C4018: '<': no coinciden signed/unsigned
-C:\Users\marcr\source\repos\SNC_ABTDin\SNC_ABTDin\src\abt_compression.cc(568,11): warning C4244: 'inicializando': conversión de 'double' a 'int'; posible pérdida de datos
-C:\Users\marcr\source\repos\SNC_ABTDin\SNC_ABTDin\src\abt_compression.cc(587,23): warning C4018: '<': no coinciden signed/unsigned
-C:\Users\marcr\source\repos\SNC_ABTDin\SNC_ABTDin\src\abt_compression.cc(630,75): warning C4244: '=': conversión de 'double' a 'int'; posible pérdida de datos
-C:\Users\marcr\source\repos\SNC_ABTDin\SNC_ABTDin\src\abt_compression.cc(639,34): warning C4244: '=': conversión de 'double' a 'int'; posible pérdida de datos
-C:\Users\marcr\source\repos\SNC_ABTDin\SNC_ABTDin\src\abt_compression.cc(668,25): warning C4018: '<': no coinciden signed/unsigned
-C:\Users\marcr\source\repos\SNC_ABTDin\SNC_ABTDin\src\abt_compression.cc(732,27): warning C4018: '<': no coinciden signed/unsigned
-C:\Users\marcr\source\repos\SNC_ABTDin\SNC_ABTDin\src\abt_compression.cc(737,19): warning C4018: '<': no coinciden signed/unsigned
-C:\Users\marcr\source\repos\SNC_ABTDin\SNC_ABTDin\src\abt_compression.cc(763,27): warning C4018: '<': no coinciden signed/unsigned
-C:\Users\marcr\source\repos\SNC_ABTDin\SNC_ABTDin\src\abt_compression.cc(770,25): warning C4018: '<': no coinciden signed/unsigned
-C:\Users\marcr\source\repos\SNC_ABTDin\SNC_ABTDin\src\abt_compression.cc(506): warning C4715: 'AbtCompression::Node_existance_checking': no todas las rutas de acceso de control devuelven un valor
-C:\Users\marcr\source\repos\SNC_ABTDin\SNC_ABTDin\src\abt_compression.cc(651): warning C4715: 'AbtCompression::node_addition': no todas las rutas de acceso de control devuelven un valor
+﻿  compress_main.cc
+C:\Users\marcr\source\repos\SNC_ABTDin\SNC_ABTDin\src\abt_compression.h(85,30): warning C4244: 'argumento': conversión de 'uint64_t' a 'const unsigned int'; posible pérdida de datos
+C:\Users\marcr\source\repos\SNC_ABTDin\SNC_ABTDin\src\abt_compression.h(99,11): warning C4244: 'argumento': conversión de 'uint64_t' a 'const unsigned int'; posible pérdida de datos
+C:\Users\marcr\source\repos\SNC_ABTDin\SNC_ABTDin\src\abt_compression.h(116,9): warning C4244: 'argumento': conversión de 'uint64_t' a 'const unsigned int'; posible pérdida de datos
+C:\Users\marcr\source\repos\SNC_ABTDin\SNC_ABTDin\src\abt_compression.h(116,27): warning C4244: 'argumento': conversión de 'uint64_t' a 'const unsigned int'; posible pérdida de datos
+C:\Users\marcr\source\repos\SNC_ABTDin\SNC_ABTDin\src\abt_compression.h(123,17): warning C4244: 'argumento': conversión de 'uint64_t' a 'const unsigned int'; posible pérdida de datos
+C:\Users\marcr\source\repos\SNC_ABTDin\SNC_ABTDin\src\abt_compression.h(149,18): warning C4244: 'argumento': conversión de 'uint64_t' a 'const unsigned int'; posible pérdida de datos
+C:\Users\marcr\source\repos\SNC_ABTDin\SNC_ABTDin\src\abt_compression.h(178,17): warning C4018: '<': no coinciden signed/unsigned
+C:\Users\marcr\source\repos\SNC_ABTDin\SNC_ABTDin\src\compress_main.cc(42,15): warning C4244: 'inicializando': conversión de 'std::streamoff' a 'long'; posible pérdida de datos
+C:\Users\marcr\source\repos\SNC_ABTDin\SNC_ABTDin\src\compress_main.cc(55,11): warning C4244: 'inicializando': conversión de 'double' a 'int'; posible pérdida de datos
   SNC_ABTDin.vcxproj -> C:\Users\marcr\source\repos\SNC_ABTDin\Debug\SNC_ABTDin.exe

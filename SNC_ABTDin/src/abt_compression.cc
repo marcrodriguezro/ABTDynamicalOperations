@@ -9,7 +9,6 @@
 #include <string>
 #include <stdlib.h>
 #include <time.h>
-
 #include <sstream>
 using namespace std;
 
@@ -49,22 +48,11 @@ public:
     while (BITS.length())
     {
       if (BITS[0] == '1')
-        *c |= 1;
-      if (BITS[0] == '2') {
-          *c |= 2;
-          ++total;
-          BITS.erase(0, 1);
-          writeBits(outf);
-          shift_count = 0;
-          free(c);
-          c = (unsigned char*)calloc(1, sizeof(char));
-      }
-      else {
-          *c <<= 1;
-          ++shift_count;
-          ++total;
-          BITS.erase(0, 1);
-      }
+            *c |= 1;
+        *c <<= 1;
+        ++shift_count;
+        ++total;
+        BITS.erase(0, 1);
       if (shift_count == 7)
       {
         if (BITS.size() > 0)
@@ -253,20 +241,22 @@ inline int sibling(int index)
 }
 void AbtCompression ::Compress(std::vector<std::pair<int, int>> edges, string result, std::vector<int> &tmp)
 {
+    std::ofstream ofs;
+    ofs.open("range.txt", std::ofstream::out | std::ofstream::trunc);
+    ofs.close();
   int current_index, start_index, n, height;
   bool dcn_reached;
   std::vector<int> order;
   std::sort(edges.begin(), edges.end());
-  auto max_pair = *std::max_element(std::begin(edges), std::end(edges), [](const auto &p1, const auto &p2) {
-    return std::max(p1.first, p1.second) < std::max(p2.first, p2.second);
-  });
+  auto max_pair = *std::max_element(std::begin(edges), std::end(edges), [](const auto& p1, const auto& p2) {
+      return std::max(p1.first, p1.second) < std::max(p2.first, p2.second);
+      });
   int max = std::max(max_pair.first, max_pair.second) + 1;
   height = (int)ceil(log2(max)) + 1;
   n = std::pow(2, height) - 1;
   start_index = (int)n / 2;
 
-  std::vector<std::vector<int>>
-  input_array(max, std::vector<int>(max, 0));
+  std::vector<std::vector<int>>input_array(max, std::vector<int>(max, 0));
   TransformToAdj(edges, true, &input_array);
 
   for (int i = 0; i < max; ++i)
@@ -297,18 +287,29 @@ void AbtCompression ::Compress(std::vector<std::pair<int, int>> edges, string re
     tmp = temp_array;
     ofstream outf(result.c_str(), std::ios_base::app);
     std::string str;
+    ofstream rangeFile;
+    rangeFile.open("range.txt", std::ios_base::app);
+    int tmp_counter = 0;
 
     for (int k = 0; k < n; k++)
     {
       if (temp_array[k] != -1)
       {
         str.push_back('0' + temp_array[k]);
+        tmp_counter++;
       }
     }
-    if (temp_array[0] != -1) {
-        str.push_back('2');
+    if (tmp_counter != 0) {
+        ostringstream strg_i;
+        rangeFile << "0 ";
+        strg_i << tmp_counter;
+        std::string final_str;
+        std::string s_aux = strg_i.str();
+        final_str.append(s_aux);
+        final_str.append("\n");
+        rangeFile << final_str;
     }
-    
+
     bitChar bchar;
     bchar.setBITS(str);
     bchar.insertBits(outf);
@@ -405,13 +406,111 @@ void preOrder(std::string &decoded, int x, int initial_v, int n) {
     }
 
 }
-
-bool AbtCompression::Node_existance_checking(std::string result, int v, int height){
+bool Input_Edges(const char* filename, vector<pair<int, int>>* edges)
+{
+    ifstream ifs(filename);
+    if (!ifs)
+        return false;
+    for (int v, w; ifs >> v >> w;)
+        edges->push_back(make_pair(v, w));
+    return !ifs.bad();
+}
+bool AbtCompression::Node_existance_checking_NCompress(std::string result, int entered_value1, int v, int height) {
     ifstream inf(result.c_str(), std::ios_base::app);
     bitChar bchar;
     std::string decoded;
     decoded = bchar.readByBits(inf);
-    cout << "before: " + decoded << endl;
+    std::string new_decoded;
+    vector<pair<int, int>> range_edges;
+    if (!Input_Edges("range.txt", &range_edges)) {
+        cerr << "error: Load failed" << endl;
+        exit(EXIT_FAILURE);
+    }
+    int counter_tmp = 1;
+    for (int i = entered_value1; i < range_edges.size(); i++) {
+        if (i == counter_tmp) {
+            range_edges[i].first = range_edges[i - 1].second; // a lo mejor hay que sumar 1 para que se pueda recortar los 0 que sobran
+            range_edges[i].second = range_edges[i].first + range_edges[i].second;
+            counter_tmp++;
+        }
+
+    }
+    std::string bit_z = "00";
+
+    std::string bit_2_insert;
+    int nextIndex = 0;
+    int n = std::pow(2, height) - 1; //num of nodes that the tree contains
+    int y = (v * 2) + ((n / 2) - v);
+
+    int f = decoded.size();
+    while (decoded.substr(f - 1, 1) != "1") {
+        decoded.pop_back();
+        f--;
+    }
+
+    int j = entered_value1;
+    if (j < decoded.size()) {
+
+        int initial_pos_dec = range_edges[j].first;
+        new_decoded = decoded.substr(initial_pos_dec, range_edges[j].second);
+        int aux = 0;
+        while (new_decoded.substr(aux, 1) != "1") {
+            new_decoded.erase(0, 1);
+            decoded.erase(range_edges[j].first, 1);
+            if (j + 1 <= range_edges.size() - 1) {
+                range_edges[j + 1].second--;
+            }
+
+        }
+        std::string bit_alt = new_decoded.substr(2, 1);
+        int node_alt = stoi(bit_alt, nullptr, 2);
+        if (node_alt == 0) {
+            n = (n / 2) - 0, 5; //num of nodes that the tree contains
+            y = (v * 2) + ((n / 2) - v);    // esto lo que hace es para el num del nodo le calcula la pos en la que iba antes de descomprimir
+            new_decoded.erase(2, 1);
+            new_decoded.erase(0, 1);
+        }
+
+        for (int i = 0; i < n - 1; i++) { // full decompression of the graph.
+            bit_2_insert = new_decoded.substr(i, 1);
+            if (bit_2_insert == "0" && (i*2+2)<n) {
+                if ((i * 2) + 1 && (i * 2) + 2) {
+                    new_decoded.insert((i * 2) + 1, bit_z);
+                }
+            }
+        }
+            if (new_decoded.substr(y, 1) == "1") {
+                return true;
+            }
+            else {
+                return false;
+            }
+        
+        
+    }
+}
+bool AbtCompression::Node_existance_checking(std::string result, int entered_value1, int v, int height){
+    ifstream inf(result.c_str(), std::ios_base::app);
+    bitChar bchar;
+    std::string decoded;
+    decoded = bchar.readByBits(inf);
+    std::string new_decoded;
+    vector<pair<int, int>> range_edges;
+    if (!Input_Edges("range.txt", &range_edges)) {
+        cerr << "error: Load failed" << endl;
+        exit(EXIT_FAILURE);
+    }
+    int counter_tmp = 1;
+    for (int i = entered_value1; i < range_edges.size(); i++) {
+        if (i == counter_tmp) {
+            range_edges[i].first = range_edges[i - 1].second; // a lo mejor hay que sumar 1 para que se pueda recortar los 0 que sobran
+            range_edges[i].second = range_edges[i].first + range_edges[i].second;
+            counter_tmp++;
+        }
+        
+    }
+    std::string extracted_bits;
+
     std::string bit;
     int nextIndex = 0;
     int n = std::pow(2, height) - 1; //num of nodes that the tree contains
@@ -431,27 +530,48 @@ bool AbtCompression::Node_existance_checking(std::string result, int v, int heig
         }
     }*/
     int f = decoded.size();
-    std::string bit2;
     while (decoded.substr(f-1, 1)!="1") {
-        bit2 = decoded.substr(f, 1);
         decoded.pop_back();
         f--;
     }
-    int i_aux = 0;
-    std::string reConstructed;
-    std::string Checked;
-    while (decoded.substr(Checked.length()+i_aux, 1) != "2") {
-        bit2 = decoded.substr(f, 1);
-        reConstructed.append(bit2);
-        i_aux++;
-    }
-    Checked.append(reConstructed);
-    reConstructed.pop_back();
-    for (int i = 0; i < reConstructed.size();) {
-        
-            bit = reConstructed.substr(i, 1);
-            if (bit != "-1") {
+
+    int j = entered_value1;
+    if(j < decoded.size()){
+
+
+        int initial_pos_dec = range_edges[j].first;
+        new_decoded = decoded.substr(initial_pos_dec, range_edges[j].second);
+        int aux = 0;
+        while (new_decoded.substr(aux, 1) != "1") {
+                new_decoded.erase(0, 1);    
+                decoded.erase(range_edges[j].first, 1);
+                if (j + 1 <= range_edges.size()-1) {
+                    range_edges[j + 1].second--;
+                }
+
+        }
+       // int auxi = 3;
+        for (int i = 0; i < new_decoded.size();) {
+
+            // bit = reConstructed.substr(i, 1);
+            bit = new_decoded.substr(i, 1);
+            std::string bit_alt = new_decoded.substr(2, 1);
+            int node_alt = stoi(bit_alt, nullptr, 2);
+            //if (bit != "-1") {
             curNode = stoi(bit, nullptr, 2);
+            if (depth == 0 &&  node_alt == 0) {
+                n = (n / 2) - 0,5; //num of nodes that the tree contains
+                midCol = ((n - 1) + ((n - 1) / 2)) / 2; // esto te da el nodo hoja central, es decir incluyendo este hacia 15/2, se va hacia el nodo izquierdo para n = 15
+                minCol = (n - 1) / 2;
+                maxCol = n - 1;
+                y = (v * 2) + ((n / 2) - v);
+                extracted_bits = new_decoded.substr(0, 2);
+                new_decoded.erase(2, 1);
+                new_decoded.erase(0, 1);
+                bit = new_decoded.substr(i, 1);
+                curNode = stoi(bit, nullptr, 2);
+            }
+
             if (curNode == 1) {
                 if (midCol == nextIndex && depth == (height - 1)) {
                     return true;
@@ -467,15 +587,27 @@ bool AbtCompression::Node_existance_checking(std::string result, int v, int heig
 
                 if (depth <= height - 2) {
                     for (int z = i; z >= (std::pow(2, depth) - 1); z--) {
-                        if (reConstructed.substr(z, 1) == "0") {
+                        if (new_decoded.substr(z, 1) == "0") {
                             int n_aux = z;
-                            preOrder(decoded, n_aux, n_aux, n);
+                            preOrder(new_decoded, n_aux, n_aux, n);
                         }
                     }
                 }
-                bit = reConstructed.substr(i, 1);
+                bit = new_decoded.substr(i, 1);
                 curNode = stoi(bit, nullptr, 2);
+                
                 if (y <= midCol && y >= minCol) { // left 
+         /*           if (new_decoded.substr((i/2)+1, 1) == "0" && i == auxi) {
+                        if ((i * 2 + 2) < n) {
+                            int x_i = 0;
+                            while (i - ((i/2)-1) > x_i+1) {
+                                int add_pos = (i * 2) - (i - (i / 2) - 1);
+                                new_decoded.insert(add_pos, "0"); // revisar pq creo que esta mal
+                                x_i++;
+                            }
+                            auxi = i * 2 + 1;
+                        }
+                    }*/
                     maxCol = midCol;
                     minCol = (maxCol - (std::pow(2, height - depth - 1) / 2)) + 1;
                     if (minCol < ((n - 1) / 2)) {
@@ -486,6 +618,7 @@ bool AbtCompression::Node_existance_checking(std::string result, int v, int heig
                 }
                 else if (y > midCol && y <= maxCol) {
                     // right
+
                     maxCol = (midCol + (std::pow(2, height - depth - 1) / 2));
                     minCol = midCol;
                     if (maxCol > (n - 1)) {
@@ -503,27 +636,30 @@ bool AbtCompression::Node_existance_checking(std::string result, int v, int heig
             i = nextIndex;
         }
     }
+    
 }
 
-void AbtCompression::reCompress(std::string result, std::string decoded, int n, int height, int max) {
+void AbtCompression::reCompress(std::string result, std::string decoded, int entered_value1, int n, int height, int max, vector<pair<int, int>> range_edges) {
     int current_index, start_index;
     bool dcn_reached;
 
     start_index = (int)n / 2;
-    std::vector<int> input_array(n, -1);
-    std::ofstream ofs;
-    ofs.open("test.txt", std::ofstream::out | std::ofstream::trunc);
-    ofs.close();
-    /*for (int i = 0; i < max; ++i)
-    {*/
-        std::vector<int> temp_array(n, -1);
-        for (int i = 0; i < decoded.size(); i++) {
-            std::string bit = decoded.substr(i, 1);
-            input_array[i] = stoi(bit, nullptr, 2);
+    std::vector<std::vector<int>>
+        input_array(range_edges.size(), std::vector<int>(range_edges[range_edges.size()-1].second, 0));
+
+ 
+    for (int i = 0; i < entered_value1; ++i)
+    {
+        std::vector<int> temp_array(range_edges[i].second, -1);
+        int length = range_edges[i].second;
+        for (int x = 0; x < length; x++) {
+            std::string bit = decoded.substr(x, 1);
+            input_array[i][x] = stoi(bit, nullptr, 2);
         }
+        
         for (int j = 0; j < max; ++j)
         {
-            if (input_array[j] == 1)// añadir [i]
+            if (input_array[i][j] == 1)// añadir [i]
             {
                 current_index = start_index + j;
                 dcn_reached = false;
@@ -555,13 +691,29 @@ void AbtCompression::reCompress(std::string result, std::string decoded, int n, 
         bitChar bchar;
         bchar.setBITS(str);
         bchar.insertBits(outf);
-    
+    }
 }
-bool AbtCompression::node_addition(std::string result, int v, int height, int max) {
+bool AbtCompression::node_addition(std::string result, int entered_value1, int v, int height, int max) {
     ifstream inf(result.c_str(), std::ios_base::app);
     bitChar bchar;
     std::string decoded;
     decoded = bchar.readByBits(inf);
+    std::string new_decoded;
+    vector<pair<int, int>> range_edges;
+    if (!Input_Edges("range.txt", &range_edges)) {
+        cerr << "error: Load failed" << endl;
+        exit(EXIT_FAILURE);
+    }
+    int counter_tmp = 1;
+    for (int i = 0; i < range_edges.size(); i++) {
+        if (i == counter_tmp) {
+            range_edges[i].first = range_edges[i - 1].second; // a lo mejor hay que sumar 1 para que se pueda recortar los 0 que sobran
+            range_edges[i].second = range_edges[i].first + range_edges[i].second;
+            counter_tmp++;
+        }
+
+    }
+
     cout << "before: " + decoded << endl;
     std::string bit;
     int nextIndex = 0;
@@ -573,81 +725,130 @@ bool AbtCompression::node_addition(std::string result, int v, int height, int ma
     int pos = 0;
     int depth = 0;
     int y = (v * 2) + ((n / 2) - v); // esto lo que hace es para el num del nodo le calcula la pos en la que iba antes de descomprimir
+    int k_i = 0;
     char bit_o = '1';
     std::string bit_zz = "00";
+    std::string extracted_bits;
     bool decompress = false;
-    decoded.pop_back();
+    std::ofstream ofs;
     int f = decoded.size();
-    std::string bit2;
     while (decoded.substr(f - 1, 1) != "1") {
-        bit2 = decoded.substr(f, 1);
         decoded.pop_back();
         f--;
     }
-    for (int i = 0; i < decoded.size();) {
-        bit = decoded.substr(i, 1);
-        curNode = stoi(bit, nullptr, 2);
-       if (curNode == 0) {
-            if (i < n) {
-                decoded[i] = bit_o;
-                if (i * 2 + 2 < n) {
-                    decoded.insert(i * 2 + 1, bit_zz);
-                }
-                cout << "after:  " + decoded << endl;
+    int j = entered_value1;
+    /*ofs.open("test.txt", std::ofstream::out | std::ofstream::trunc);
+    ofs.close();*/
+    if (j < decoded.size()) {
+
+
+        int initial_pos_dec = range_edges[j].first;
+        new_decoded = decoded.substr(initial_pos_dec, range_edges[j].second);
+        int aux = 0;
+        while (new_decoded.substr(aux, 1) != "1") {
+            new_decoded.erase(0, 1);
+            decoded.erase(range_edges[j].first, 1);
+            if (j + 1 <= range_edges.size() - 1) {
+                range_edges[j + 1].second--;
             }
-            else {
-                return false;
-            }
-            bit = decoded.substr(i, 1);
-            curNode = stoi(bit, nullptr, 2);
         }
-           if (midCol == nextIndex && depth == (height - 1)) {
-                cout << "finally:" + decoded << endl;
-                reCompress(result, decoded, n, height, max);
-                return true;
-            }
+            for (int i = 0; i < new_decoded.size();) {
+                bit = new_decoded.substr(i, 1);
+                std::string bit_alt = new_decoded.substr(2, 1);
+                int node_alt = stoi(bit_alt, nullptr, 2);
+                //if (bit != "-1") {
+                curNode = stoi(bit, nullptr, 2);
+                if (depth == 0 && node_alt == 0) {
+                    height = height - 1;
+                    n = (n / 2) - 0, 5; //num of nodes that the tree contains
+                    midCol = ((n - 1) + ((n - 1) / 2)) / 2; // esto te da el nodo hoja central, es decir incluyendo este hacia 15/2, se va hacia el nodo izquierdo para n = 15
+                    minCol = (n - 1) / 2;
+                    maxCol = n - 1;
+                    y = (v * 2) + ((n / 2) - v);
+                    extracted_bits = new_decoded.substr(0, 2);
+                    new_decoded.erase(2, 1);
+                    new_decoded.erase(0, 1);
+                    bit = new_decoded.substr(i, 1);
+                    curNode = stoi(bit, nullptr, 2);
+                }
+                if (curNode == 0) {
+                    if (i < n) {
+                        new_decoded[i] = bit_o;
+                        if (i * 2 + 2 < n) {
+                            new_decoded.insert(i * 2 + 1, bit_zz);
+                        }
+                        cout << "after:  " + new_decoded << endl;
+                    }
+                    else {
+                        return false;
+                    }
+                    bit = new_decoded.substr(i, 1);
+                    curNode = stoi(bit, nullptr, 2);
+                }
+                if (midCol == nextIndex && depth == (height - 1)) {
+                    cout << "almost:" + new_decoded << endl;
+                    range_edges[j].second = range_edges[j].first + new_decoded.size();
+                    if (j + 1 <= range_edges.size() - 1) {
+                        range_edges[j].first = range_edges[j].second;
+                    }
+                    //height++;
+                    /*std::string new_string = decoded.substr(0, range_edges[j].first);
+                    std::string end_string = decoded.substr(range_edges[j].second+1, range_edges[j].second - decoded.size());*/
+                    //new_string.append(new_decoded);
 
-            if (y <= midCol) {
-                pos = 0;
-            }
-            else {
-                pos = 1;
-            }
-            nextIndex = (i * 2) + pos + 1;
+                    
 
-            if (depth <= height-2) {
-                for (int z = i; z >= (std::pow(2, depth) - 1); z--) {
-                    if (decoded.substr(z, 1) == "0") {
-                        int n_aux = z;
-                        preOrder(decoded, n_aux, n_aux, n);
+                    while (k_i < range_edges.size()) {
+                        reCompress(result, decoded, entered_value1, n, height, max, range_edges);
+                        k_i++;
+                    }
+                    return true;
+                }
+
+                if (y <= midCol) {
+                    pos = 0;
+                }
+                else {
+                    pos = 1;
+                }
+                nextIndex = (i * 2) + pos + 1;
+
+                if (depth <= height - 2) {
+                    for (int z = i; z >= (std::pow(2, depth) - 1); z--) {
+                        if (new_decoded.substr(z, 1) == "0") {
+                            int n_aux = z;
+                            preOrder(new_decoded, n_aux, n_aux, n);
+                        }
                     }
                 }
-            }
-            bit = decoded.substr(i, 1);
-            curNode = stoi(bit, nullptr, 2);
-            if (y <= midCol && y >= minCol) { // left 
-                maxCol = midCol;
-                minCol = (maxCol - (std::pow(2, height - depth - 1) / 2)) + 1;
-                if (minCol < ((n - 1) / 2)) {
-                    minCol = (n - 1) / 2;
+                bit = new_decoded.substr(i, 1);
+                curNode = stoi(bit, nullptr, 2);
+                if (y <= midCol && y >= minCol) { // left 
+                    maxCol = midCol;
+                    minCol = (maxCol - (std::pow(2, height - depth - 1) / 2)) + 1;
+                    if (minCol < ((n - 1) / 2)) {
+                        minCol = (n - 1) / 2;
+                    }
+                    midCol = (maxCol + minCol) / 2;
+                    depth++;
                 }
-                midCol = (maxCol + minCol) / 2;
-                depth++;
-            }
-            else if (y > midCol && y <= maxCol) {
-                // right
-                maxCol = (midCol + (std::pow(2, height - depth - 1) / 2));
-                minCol = midCol;
-                if (maxCol > (n - 1)) {
-                    maxCol = (n - 1);
+                else if (y > midCol && y <= maxCol) {
+                    // right
+                    maxCol = (midCol + (std::pow(2, height - depth - 1) / 2));
+                    minCol = midCol;
+                    if (maxCol > (n - 1)) {
+                        maxCol = (n - 1);
+                    }
+                    midCol = (maxCol + minCol) / 2;
+                    depth++;
                 }
-                midCol = (maxCol + minCol) / 2;
-                depth++;
-            }
 
 
-        i = nextIndex;
-    }
+                i = nextIndex;
+            }
+        }
+    
+
 }
 
 void AbtCompression ::BFSOrder(const std::vector<std::vector<int>> &adj, std::vector<int> *order)

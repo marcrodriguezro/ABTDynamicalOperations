@@ -6,6 +6,7 @@
 #include <vector>
 #include <cstdio>
 #include <string>
+using namespace std;
 
 const int kWINDOW_WIDTH = 10;
 enum Ordering
@@ -57,10 +58,10 @@ public:
                 std::string result, std::vector<int> &tmp);
   void Develop(const BitString &code,
                std::vector<std::pair<int, int>> *edges);
-  bool Node_existance_checking(std::string result, int v, int height);
-
-  bool node_addition(std::string result, int v, int height, int max);
-  void reCompress(std::string result, std::string decoded, int n, int height, int max);
+  bool Node_existance_checking(std::string result, int entered_value1, int entered_value2, int height);
+  bool Node_existance_checking_NCompress(std::string result, int entered_value1, int entered_value2, int height);
+  bool node_addition(std::string result, int entered_value1, int entered_value2, int height, int max);
+  void reCompress(std::string result, std::string decoded, int entered_value1, int n, int height, int max, vector<pair<int, int>> range_edges);
 
 private:
   void BFSOrder(const std::vector<std::vector<int>> &adj,

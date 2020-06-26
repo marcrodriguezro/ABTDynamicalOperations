@@ -521,14 +521,7 @@ bool AbtCompression::Node_existance_checking(std::string result, int entered_val
     int pos=0;
     int depth = 0;
     int y = (v * 2)+((n/2)-v); // esto lo que hace es para el num del nodo le calcula la pos en la que iba antes de descomprimir
-    /*for (int i = 0; i < n - 1;i++) { // full decompression of the graph.
-        bit_2_insert = decoded.substr(i, 1);
-        if (bit_2_insert == "0") {
-            if ((i*2) + 1 && (i * 2) + 2) {
-                decoded.insert((i*2)+1, bit_z);
-            }
-        }
-    }*/
+
     int f = decoded.size();
     while (decoded.substr(f-1, 1)!="1") {
         decoded.pop_back();
@@ -550,14 +543,14 @@ bool AbtCompression::Node_existance_checking(std::string result, int entered_val
                 }
 
         }
-       // int auxi = 3;
+     
         for (int i = 0; i < new_decoded.size();) {
 
-            // bit = reConstructed.substr(i, 1);
+ 
             bit = new_decoded.substr(i, 1);
             std::string bit_alt = new_decoded.substr(2, 1);
             int node_alt = stoi(bit_alt, nullptr, 2);
-            //if (bit != "-1") {
+
             curNode = stoi(bit, nullptr, 2);
             if (depth == 0 &&  node_alt == 0) {
                 n = (n / 2) - 0,5; //num of nodes that the tree contains
@@ -597,17 +590,7 @@ bool AbtCompression::Node_existance_checking(std::string result, int entered_val
                 curNode = stoi(bit, nullptr, 2);
                 
                 if (y <= midCol && y >= minCol) { // left 
-         /*           if (new_decoded.substr((i/2)+1, 1) == "0" && i == auxi) {
-                        if ((i * 2 + 2) < n) {
-                            int x_i = 0;
-                            while (i - ((i/2)-1) > x_i+1) {
-                                int add_pos = (i * 2) - (i - (i / 2) - 1);
-                                new_decoded.insert(add_pos, "0"); // revisar pq creo que esta mal
-                                x_i++;
-                            }
-                            auxi = i * 2 + 1;
-                        }
-                    }*/
+
                     maxCol = midCol;
                     minCol = (maxCol - (std::pow(2, height - depth - 1) / 2)) + 1;
                     if (minCol < ((n - 1) / 2)) {
@@ -659,7 +642,7 @@ void AbtCompression::reCompress(std::string result, std::string decoded, int ent
         
         for (int j = 0; j < max; ++j)
         {
-            if (input_array[i][j] == 1)// añadir [i]
+            if (input_array[i][j] == 1)
             {
                 current_index = start_index + j;
                 dcn_reached = false;
@@ -714,7 +697,7 @@ bool AbtCompression::node_addition(std::string result, int entered_value1, int v
 
     }
 
-    cout << "before: " + decoded << endl;
+
     std::string bit;
     int nextIndex = 0;
     int n = std::pow(2, height) - 1; //num of nodes that the tree contains
@@ -737,8 +720,7 @@ bool AbtCompression::node_addition(std::string result, int entered_value1, int v
         f--;
     }
     int j = entered_value1;
-    /*ofs.open("test.txt", std::ofstream::out | std::ofstream::trunc);
-    ofs.close();*/
+
     if (j < decoded.size()) {
 
 
@@ -756,7 +738,7 @@ bool AbtCompression::node_addition(std::string result, int entered_value1, int v
                 bit = new_decoded.substr(i, 1);
                 std::string bit_alt = new_decoded.substr(2, 1);
                 int node_alt = stoi(bit_alt, nullptr, 2);
-                //if (bit != "-1") {
+
                 curNode = stoi(bit, nullptr, 2);
                 if (depth == 0 && node_alt == 0) {
                     height = height - 1;
@@ -777,7 +759,7 @@ bool AbtCompression::node_addition(std::string result, int entered_value1, int v
                         if (i * 2 + 2 < n) {
                             new_decoded.insert(i * 2 + 1, bit_zz);
                         }
-                        cout << "after:  " + new_decoded << endl;
+
                     }
                     else {
                         return false;
@@ -786,16 +768,11 @@ bool AbtCompression::node_addition(std::string result, int entered_value1, int v
                     curNode = stoi(bit, nullptr, 2);
                 }
                 if (midCol == nextIndex && depth == (height - 1)) {
-                    cout << "almost:" + new_decoded << endl;
+
                     range_edges[j].second = range_edges[j].first + new_decoded.size();
                     if (j + 1 <= range_edges.size() - 1) {
                         range_edges[j].first = range_edges[j].second;
                     }
-                    //height++;
-                    /*std::string new_string = decoded.substr(0, range_edges[j].first);
-                    std::string end_string = decoded.substr(range_edges[j].second+1, range_edges[j].second - decoded.size());*/
-                    //new_string.append(new_decoded);
-
                     
 
                     while (k_i < range_edges.size()) {
@@ -850,7 +827,75 @@ bool AbtCompression::node_addition(std::string result, int entered_value1, int v
     
 
 }
+bool AbtCompression::node_addition_NCompress(std::string result, int entered_value1, int v, int height, int max) {
+    ifstream inf(result.c_str(), std::ios_base::app);
+    bitChar bchar;
+    std::string decoded;
+    decoded = bchar.readByBits(inf);
+    std::string new_decoded;
+    vector<pair<int, int>> range_edges;
+    if (!Input_Edges("range.txt", &range_edges)) {
+        cerr << "error: Load failed" << endl;
+        exit(EXIT_FAILURE);
+    }
+    int counter_tmp = 1;
+    for (int i = entered_value1; i < range_edges.size(); i++) {
+        if (i == counter_tmp) {
+            range_edges[i].first = range_edges[i - 1].second; // a lo mejor hay que sumar 1 para que se pueda recortar los 0 que sobran
+            range_edges[i].second = range_edges[i].first + range_edges[i].second;
+            counter_tmp++;
+        }
 
+    }
+    std::string bit_z = "00";
+
+    std::string bit_2_insert;
+    int nextIndex = 0;
+    int n = std::pow(2, height) - 1; //num of nodes that the tree contains
+    int y = (v * 2) + ((n / 2) - v);
+
+    int f = decoded.size();
+    while (decoded.substr(f - 1, 1) != "1") {
+        decoded.pop_back();
+        f--;
+    }
+
+    int j = entered_value1;
+    if (j < decoded.size()) {
+
+        int initial_pos_dec = range_edges[j].first;
+        new_decoded = decoded.substr(initial_pos_dec, range_edges[j].second);
+        int aux = 0;
+        while (new_decoded.substr(aux, 1) != "1") {
+            new_decoded.erase(0, 1);
+            decoded.erase(range_edges[j].first, 1);
+            if (j + 1 <= range_edges.size() - 1) {
+                range_edges[j + 1].second--;
+            }
+
+        }
+        std::string bit_alt = new_decoded.substr(2, 1);
+        int node_alt = stoi(bit_alt, nullptr, 2);
+        if (node_alt == 0) {
+            n = (n / 2) - 0, 5; //num of nodes that the tree contains
+            y = (v * 2) + ((n / 2) - v);    // esto lo que hace es para el num del nodo le calcula la pos en la que iba antes de descomprimir
+            new_decoded.erase(2, 1);
+            new_decoded.erase(0, 1);
+        }
+
+        for (int i = 0; i < n - 1; i++) { // full decompression of the graph.
+            bit_2_insert = new_decoded.substr(i, 1);
+            if (bit_2_insert == "0" && (i * 2 + 2) < n) {
+                if ((i * 2) + 1 && (i * 2) + 2) {
+                    new_decoded.insert((i * 2) + 1, bit_z);
+                }
+            }
+        }
+        new_decoded[v] = '1';
+        reCompress(result, decoded, entered_value1, n, height, max, range_edges);
+        return true;
+    }
+}
 void AbtCompression ::BFSOrder(const std::vector<std::vector<int>> &adj, std::vector<int> *order)
 {
   int num_v = adj.size();

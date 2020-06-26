@@ -18,7 +18,7 @@ int main(/*int argc, char **argv*/)
      */
     std::vector<int> tmp;
     vector<pair<int, int>> edges;
-    if (!Input("../data/graph/modified/tvshow_edges2.txt", &edges))
+    if (!Input("../data/graph/modified/tvshow_edges3.txt", &edges))
     {
         cerr << "error: Load failed" << endl;
         exit(EXIT_FAILURE);
@@ -58,7 +58,7 @@ int main(/*int argc, char **argv*/)
     int entered_value1 = 0;
     int entered_value2 = 0;
 
-    cout << "If you want to check the existance of a node press 1, otherwise if you want to add a node press 2, finally if you want to check the existance of a node with a non-dynamical algorithm press 3" << endl;
+    cout << "If you want to check the existance of a node press 1, otherwise if you want to add a node press 2, if you want to check the existance of a node with a non-dynamical algorithm press 3, finally if you want to add a node in a static way press 4" << endl;
     cin >> button_pressed;
     cout << "If you want to stop the execution enter -1" << endl;
     if (button_pressed == 1) {
@@ -102,14 +102,20 @@ int main(/*int argc, char **argv*/)
                 cout << "Some of the nodes that you are refering DO NOT EXIST because you entered a number lower than 0" << endl;
             }
             else {
-                
+                auto start_dynamically = std::chrono::high_resolution_clock::now();
                 check_existance_v = bl.node_addition(result, entered_value1, entered_value2, height, max);
 
                 if (check_existance_v) {
                     cout << "The the conection between those nodes has been added correclty." << endl;
+                    auto finish_dynamically = std::chrono::high_resolution_clock::now();
+                    std::chrono::duration<double> elapsed = finish_dynamically - start_dynamically;
+                    cout << "Elapsed time to check the existance of an edge and a node dynamically: " << elapsed.count() << " s\n";
                 }
                 else {
                     cout << "There's some trouble adding the nodes and the conection between those nodes you selected" << endl;
+                    auto finish_dynamically = std::chrono::high_resolution_clock::now();
+                    std::chrono::duration<double> elapsed = finish_dynamically - start_dynamically;
+                    cout << "Elapsed time to add an edge and a node dynamically: " << elapsed.count() << " s\n";
                 }
             }
         }
@@ -143,6 +149,34 @@ int main(/*int argc, char **argv*/)
                 }
             }
         }
+    }
+    else if (button_pressed == 4) {
+        while (entered_value1 != -1 || entered_value2 != -1) {
+            cout << "Enter the conection between the nodes that you want to add in a static way" << endl;
+            cin >> entered_value1;
+            cin >> entered_value2;
+            if (entered_value1 > n / 2 || entered_value2 > n / 2) {
+                cout << "Some of the nodes that you are refering DO NOT EXIST because the tree is not that bigger " << endl;
+            }
+            else if (entered_value1 < 0 || entered_value2 < 0) {
+                cout << "Some of the nodes that you are refering DO NOT EXIST because you entered a number lower than 0" << endl;
+            }
+            else {
+                auto start_static = std::chrono::high_resolution_clock::now();
+                check_existance_v = bl.node_addition(result, entered_value1, entered_value2, height, max);
+
+                if (check_existance_v) {
+                    cout << "The the conection between those nodes has been added correclty." << endl;
+                    auto finish_static = std::chrono::high_resolution_clock::now();
+                    std::chrono::duration<double> elapsed = finish_static - start_static;
+                    cout << "Elapsed time to check the existance of an edge and a node dynamically: " << elapsed.count() << " s\n";
+                }
+                else {
+                    cout << "There's some trouble adding the nodes and the conection between those nodes you selected" << endl;
+                }
+            }
+        }
+
     }
 }
 bool Input(const char *filename, vector<pair<int, int>> *edges)

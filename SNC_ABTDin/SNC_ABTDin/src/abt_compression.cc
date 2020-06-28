@@ -10,6 +10,7 @@
 #include <stdlib.h>
 #include <time.h>
 #include <sstream>
+#include <math.h>
 using namespace std;
 
 class bitChar
@@ -381,19 +382,29 @@ void AbtCompression ::Develop(const BitString &code, std::vector<std::pair<int, 
 
 void preOrder(std::string &decoded, int x, int initial_v, int n) {
     int v = x;
-    std::string bit_z = "0";
-    if (((v * 2) + 1) <= n-1) {
-        while (((v * 2) + 1) < n - 1) {
-            int son = (v * 2) + 1;
-            int dif = (n - 1) - son - 1;
-            decoded.insert(decoded.size()-dif, bit_z);
-            v = (v * 2) + 1;
+    
+    int actual_pos = initial_v;
+    int altura = trunc(log2(v+1));
+    int count_aux = std::pow(2,altura)-1;
+    std::string bit_z = "00";
+    if (((v * 2) + 2) <= n-1) {
+        while (((count_aux * 2) + 2) < n - 1 && count_aux <= actual_pos) {
+            //int son = (v * 2) + 1;
+            //int dif = (n - 1) - son - 1;
+            std::string bit_alt = decoded.substr(count_aux, 1);
+            int node_act = stoi(bit_alt, nullptr, 2);
+            if (node_act==0) {
+                decoded.insert((count_aux*2)+1, bit_z);
+            }
+            count_aux++;
+            
+            //v = (v * 2) + 1;
         }
-        if (((v * 2) + 1) > n - 1) {
+        /*if (((v * 2) + 1) > n - 1) {
             v = initial_v;
-        }
+        }*/
     }
-     if (((v * 2) + 2) <= n-1) {
+    /* if (((v * 2) + 2) <= n-1) {
         while (((v * 2) + 2) <= n - 1) {
             int son = (v * 2) + 2;
             int dif = (n - 1) - son - 1;
@@ -402,10 +413,10 @@ void preOrder(std::string &decoded, int x, int initial_v, int n) {
         }
         if (((v * 2) + 2) > n - 1) {
             v = initial_v;
-        }
+        }*/
     }
 
-}
+
 bool Input_Edges(const char* filename, vector<pair<int, int>>* edges)
 {
     ifstream ifs(filename);
@@ -529,6 +540,7 @@ bool AbtCompression::Node_existance_checking(std::string result, int entered_val
     }
 
     int j = entered_value1;
+    bool reconstructed = false;
     if(j < decoded.size()){
 
 
@@ -580,9 +592,10 @@ bool AbtCompression::Node_existance_checking(std::string result, int entered_val
 
                 if (depth <= height - 2) {
                     for (int z = i; z >= (std::pow(2, depth) - 1); z--) {
-                        if (new_decoded.substr(z, 1) == "0") {
+                        if (new_decoded.substr(z, 1) == "0" && reconstructed == false) {
                             int n_aux = z;
                             preOrder(new_decoded, n_aux, n_aux, n);
+                            reconstructed = true;
                         }
                     }
                 }
@@ -720,7 +733,7 @@ bool AbtCompression::node_addition(std::string result, int entered_value1, int v
         f--;
     }
     int j = entered_value1;
-
+    bool reconstructed = false;
     if (j < decoded.size()) {
 
 
@@ -792,9 +805,10 @@ bool AbtCompression::node_addition(std::string result, int entered_value1, int v
 
                 if (depth <= height - 2) {
                     for (int z = i; z >= (std::pow(2, depth) - 1); z--) {
-                        if (new_decoded.substr(z, 1) == "0") {
+                        if (new_decoded.substr(z, 1) == "0" && reconstructed == false) {
                             int n_aux = z;
                             preOrder(new_decoded, n_aux, n_aux, n);
+                            reconstructed = true;
                         }
                     }
                 }
